@@ -17,19 +17,20 @@ public class TurmaMapper {
     ){
         return new Turma(
                 turmaRequisicao.nome(),
-                turmaRequisicao.curso_id()
+                turmaRequisicao.curso_id(),
+                turmaRequisicao.professor_id()
         );
     }
 
     public TurmaDTOResposta paraRespostaDto(
-            Turma turma, Curso curso, Professor professor, List<String> alunoIds
+            Turma turma, Curso curso, Professor professor, List<String> alunoNomes
     ){
         return new TurmaDTOResposta(
                 turma.getId(),
                 turma.getNome(),
                 curso.getNome(),
                 professor.getNome(),
-                alunoIds
+                alunoNomes
         );
     }
 }

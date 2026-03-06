@@ -9,12 +9,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class AlunoMapper {
 
-    private final AlunoService aulaService;
-
-    public AlunoMapper(AlunoService aulaService){
-        this.aulaService = aulaService;
-    }
-
     public Aluno paraEntidade(
             AlunoDTORequisicao alunoRequisicao
     ){

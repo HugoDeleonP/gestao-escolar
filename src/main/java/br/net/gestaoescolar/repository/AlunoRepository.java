@@ -111,15 +111,15 @@ public class AlunoRepository {
         String sql = """
                 UPDATE aluno
                 SET
-                nome = ?
-                email = ?
-                matricula = ?
+                nome = ?,
+                email = ?,
+                matricula = ?,
                 data_nascimento = ?
                 WHERE id = ?
                 """;
 
         try(Connection conn = DatabaseConnect.connection()) {
-            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement stmt = conn.prepareStatement(sql);
 
             stmt.setString(1, aluno.getNome());
             stmt.setString(2, aluno.getEmail());
@@ -129,15 +129,7 @@ public class AlunoRepository {
 
             stmt.executeUpdate();
 
-            ResultSet rs = stmt.getGeneratedKeys();
-
-            if(rs.next()){
-                aluno.setId(rs.getLong(1));
-
-                return aluno;
-            }
-
-            return null;
+            return aluno;
         }
     }
 
@@ -154,4 +146,6 @@ public class AlunoRepository {
             stmt.executeUpdate();
         }
     }
+
+
 }

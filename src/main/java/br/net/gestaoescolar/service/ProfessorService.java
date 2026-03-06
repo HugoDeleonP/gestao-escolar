@@ -47,7 +47,7 @@ public class ProfessorService {
         Professor professor = professorMapper.paraEntidade(professorRequisicao);
         professor.setId(id);
 
-        return professorMapper.paraRespostaDto(professorRepository.salvaProfessor(professor));
+        return professorMapper.paraRespostaDto(professorRepository.atualizaProfessor(professor));
     }
 
     public void deletaProfessor(Long id) throws SQLException{

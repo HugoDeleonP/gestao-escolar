@@ -7,6 +7,6 @@ public record TurmaDTOResposta(
         String nome,
         String curso_nome,
         String professor_nome,
-        List<String> alunoIds
+        List<String> alunoNomes
 ) {
 }

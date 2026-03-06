@@ -1,20 +1,22 @@
 package br.net.gestaoescolar.repository;
 
-import br.net.gestaoescolar.model.Professor;
+import br.net.gestaoescolar.model.Aula;
 import infra.database.DatabaseConnect;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ProfessorRepository {
+public class AulaRepository {
 
-    public Professor salvaProfessor(Professor professor) throws SQLException {
+    public Aula salvaAula(Aula aula) throws SQLException {
         String sql = """
-                INSERT INTO professor
-                (nome, email, disciplina)
+                INSERT INTO aula
+                (turma_id, data_hora, assunto)
                 VALUES
                 (?, ?, ?)
                 """;
@@ -22,29 +24,29 @@ public class ProfessorRepository {
         try(Connection conn = DatabaseConnect.connection()) {
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            stmt.setString(1, professor.getNome());
-            stmt.setString(2, professor.getEmail());
-            stmt.setString(3, professor.getDisciplina());
+            stmt.setLong(1, aula.getTurma_id());
+            stmt.setObject(2, aula.getData_hora());
+            stmt.setString(3, aula.getAssunto());
 
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
 
             if(rs.next()){
-                professor.setId(rs.getLong(1));
+                aula.setId(rs.getLong(1));
 
-                return professor;
+                return aula;
             }
 
             return null;
         }
     }
 
-    public Professor listaProfessorPorId(Long id) throws SQLException{
+    public Aula listaAulaPorId(Long id) throws SQLException{
 
         String sql = """
-                SELECT id, nome, email, disciplina
-                FROM professor
+                SELECT id, turma_id, data_hora, assunto
+                FROM aula
                 WHERE id = ?
                 """;
 
@@ -57,11 +59,11 @@ public class ProfessorRepository {
 
             if(rs.next()){
 
-                String nome = rs.getString("nome");
-                String email = rs.getString("email");
-                String disciplina = rs.getString("disciplina");
+                Long turma_id = rs.getLong("turma_id");
+                LocalDateTime data_hora = rs.getObject("data_hora", LocalDateTime.class);
+                String assunto = rs.getString("assunto");
 
-                return new Professor(id, nome, email, disciplina);
+                return new Aula(id, turma_id, data_hora, assunto);
 
             }
 
@@ -71,14 +73,14 @@ public class ProfessorRepository {
 
     }
 
-    public List<Professor> listaProfessores() throws SQLException{
+    public List<Aula> listaAulas() throws SQLException{
 
         String sql = """
-                SELECT id, nome, email, disciplina
-                FROM professor
+                SELECT id, turma_id, data_hora, assunto
+                FROM aula
                 """;
 
-        List<Professor> professores = new ArrayList<>();
+        List<Aula> aulas = new ArrayList<>();
 
         try(Connection conn = DatabaseConnect.connection()) {
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -88,48 +90,47 @@ public class ProfessorRepository {
             while(rs.next()){
 
                 Long id = rs.getLong("id");
-                String nome = rs.getString("nome");
-                String email = rs.getString("email");
-                String disciplina = rs.getString("disciplina");
+                Long turma_id = rs.getLong("turma_id");
+                LocalDateTime data_hora = rs.getObject("data_hora", LocalDateTime.class);
+                String assunto = rs.getString("assunto");
 
-
-                professores.add(new Professor(id, nome, email, disciplina)) ;
+                aulas.add(new Aula(id, turma_id, data_hora, assunto)) ;
 
             }
 
-            return professores;
+            return aulas;
 
         }
 
     }
 
-    public Professor atualizaProfessor(Professor professor) throws SQLException {
+    public Aula atualizaAula(Aula aula) throws SQLException {
         String sql = """
-                UPDATE professor
+                UPDATE aula
                 SET
-                nome = ?,
-                email = ?,
-                disciplina = ?
+                turma_id = ?,
+                data_hora = ?,
+                assunto = ?
                 WHERE id = ?
                 """;
 
         try(Connection conn = DatabaseConnect.connection()) {
             PreparedStatement stmt = conn.prepareStatement(sql);
 
-            stmt.setString(1, professor.getNome());
-            stmt.setString(2, professor.getEmail());
-            stmt.setString(3, professor.getDisciplina());
-            stmt.setLong(4, professor.getId());
+            stmt.setLong(1, aula.getTurma_id());
+            stmt.setObject(2, aula.getData_hora());
+            stmt.setString(3, aula.getAssunto());
+            stmt.setLong(4, aula.getId());
 
             stmt.executeUpdate();
 
-            return professor;
+            return aula;
         }
     }
 
-    public void deletaProfessor(Long id) throws SQLException{
+    public void deletaAula(Long id) throws SQLException{
         String sql = """
-                DELETE FROM professor
+                DELETE FROM aula
                 WHERE id = ?
                 """;
 
@@ -140,4 +141,5 @@ public class ProfessorRepository {
             stmt.executeUpdate();
         }
     }
+
 }
